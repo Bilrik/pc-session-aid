@@ -9,5 +9,6 @@ func (hp *HP) ModifyMax(amount int) {
 		hp.Max = 0
 		return
 	}
-	// TODO: Modify current HP
+
+	hp.Max = uint(int(hp.Max) + amount)
 }
