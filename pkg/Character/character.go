@@ -57,3 +57,13 @@ func NewCharacter(opts ...func(*Character)) *Character {
 func (c *Character) GetSpeed() uint {
 	return c.Race.Speed
 }
+
+func (c *Character) GetAC() uint {
+	ac := 10 + c.Dexterity.GetModifier() + c.Race.Size.GetACBonus()
+
+	if ac < 0 {
+		return 0
+	}
+
+	return uint(ac)
+}
