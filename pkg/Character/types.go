@@ -22,6 +22,7 @@ type Character struct {
 	Charisma     stats.Ability
 	Race         race.Race
 	Class        class.Class
+	equipment    []interface{}
 }
 
 var (

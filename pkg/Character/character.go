@@ -98,3 +98,20 @@ func (c *Character) GetReflexSave() int {
 func (c *Character) GetWillSave() int {
 	return c.Wisdom.GetModifier()
 }
+
+func (c *Character) GetInventory() []interface{} {
+	return c.equipment
+}
+
+func (c *Character) AddItem(i interface{}) {
+	c.equipment = append(c.equipment, i)
+}
+
+func (c *Character) RemoveItem(i interface{}) {
+	for index, item := range c.equipment {
+		if item == i {
+			c.equipment = append(c.equipment[:index], c.equipment[index+1:]...)
+			return
+		}
+	}
+}

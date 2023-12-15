@@ -5,6 +5,7 @@ import (
 
 	character "github.com/Bilrik/pc-session-aid/pkg/Character"
 	class "github.com/Bilrik/pc-session-aid/pkg/Class"
+	equipment "github.com/Bilrik/pc-session-aid/pkg/Equipment"
 	race "github.com/Bilrik/pc-session-aid/pkg/Race"
 )
 
@@ -28,4 +29,8 @@ func main() {
 	fmt.Printf("Class: %s, Level: %d\n", c.Class.Name, c.Class.GetLevel())
 	fmt.Printf("Fort: %d, Ref: %d, Will: %d\n", c.GetFortitudeSave(), c.GetReflexSave(), c.GetWillSave())
 	fmt.Printf("%+v\n", c)
+	c.AddItem(equipment.ShortSword)
+	fmt.Println(c.GetInventory())
+	c.RemoveItem(equipment.ShortSword)
+	fmt.Println(c.GetInventory())
 }
