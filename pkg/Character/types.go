@@ -1,6 +1,9 @@
 package character
 
 import (
+	"errors"
+
+	class "github.com/Bilrik/pc-session-aid/pkg/Class"
 	race "github.com/Bilrik/pc-session-aid/pkg/Race"
 	stats "github.com/Bilrik/pc-session-aid/pkg/Stats"
 )
@@ -18,4 +21,9 @@ type Character struct {
 	Wisdom       stats.Ability
 	Charisma     stats.Ability
 	Race         race.Race
+	Class        class.Class
 }
+
+var (
+	ErrInvalidHP = errors.New("HP invalid")
+)

@@ -1,6 +1,9 @@
 package character
 
-import race "github.com/Bilrik/pc-session-aid/pkg/Race"
+import (
+	class "github.com/Bilrik/pc-session-aid/pkg/Class"
+	race "github.com/Bilrik/pc-session-aid/pkg/Race"
+)
 
 func WithCharacterName(name string) func(*Character) {
 	return func(c *Character) {
@@ -37,21 +40,28 @@ func WithRace(r race.Race) func(*Character) {
 	}
 }
 
-func WithMaxHP(hpMax uint) func(*Character) {
+func WithClass(class class.Class) func(*Character) {
 	return func(c *Character) {
-		c.HP.Max = hpMax
-		c.HP.Current = int(hpMax)
+		c.Class = class
+		c.Class.LevelUp()
 	}
 }
 
-func NewCharacter(opts ...func(*Character)) *Character {
+func NewCharacter(opts ...func(*Character)) (*Character, error) {
 	c := new(Character)
 
 	for _, opt := range opts {
 		opt(c)
 	}
 
-	return c
+	if hp := int(c.Class.GetHitDie()) + c.Constitution.GetModifier(); hp < 1 {
+		return nil, ErrInvalidHP
+	} else {
+		c.HP.Max = uint(hp)
+	}
+	c.HP.Current = int(c.HP.Max)
+
+	return c, nil
 }
 
 func (c *Character) GetSpeed() uint {
@@ -66,4 +76,25 @@ func (c *Character) GetAC() uint {
 	}
 
 	return uint(ac)
+}
+
+func (c *Character) LevelUp(takeAverage bool) {
+	c.Class.LevelUp()
+	hpGain := c.Class.GetHPRoll()
+	if takeAverage {
+		hpGain = c.Class.GetHPAverage()
+	}
+	c.HP.ModifyMax(int(hpGain))
+}
+
+func (c *Character) GetFortitudeSave() int {
+	return c.Constitution.GetModifier()
+}
+
+func (c *Character) GetReflexSave() int {
+	return c.Dexterity.GetModifier()
+}
+
+func (c *Character) GetWillSave() int {
+	return c.Wisdom.GetModifier()
 }
