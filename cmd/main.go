@@ -22,4 +22,5 @@ func main() {
 
 	fmt.Printf("%+v\n", c)
 	fmt.Printf("speed: %d\n", c.GetSpeed())
+	fmt.Printf("AC: %d\n", c.GetAC())
 }
