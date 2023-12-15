@@ -30,7 +30,5 @@ func main() {
 	fmt.Printf("Fort: %d, Ref: %d, Will: %d\n", c.GetFortitudeSave(), c.GetReflexSave(), c.GetWillSave())
 	fmt.Printf("%+v\n", c)
 	c.AddItem(equipment.ShortSword)
-	fmt.Println(c.GetInventory())
-	c.RemoveItem(equipment.ShortSword)
-	fmt.Println(c.GetInventory())
+	c.Print()
 }

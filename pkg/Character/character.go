@@ -1,6 +1,10 @@
 package character
 
 import (
+	"fmt"
+	"os"
+	"text/tabwriter"
+
 	class "github.com/Bilrik/pc-session-aid/pkg/Class"
 	race "github.com/Bilrik/pc-session-aid/pkg/Race"
 )
@@ -117,26 +121,28 @@ func (c *Character) RemoveItem(i interface{}) {
 }
 
 func (c *Character) Print() {
-	fmt.Printf("Name: %s \t Race: %s", c.Name, c.Race.GetName())
+	fmt.Printf("Name: %s \t Race: %s\n", c.Name, c.Race.Name)
 	fmt.Printf("Age: %d \t Height: %s\t Weight: %d\n", c.Age, c.Height, c.Weight)
-	fmt.Printf("Level: %d, Class: %s\n", c.Class.GetLevel(),c.Class.GetName())
+	fmt.Printf("Level: %d, Class: %s\n", c.Class.GetLevel(), c.Class.Name)
 
 	fmt.Printf("HP: %d/%d\n", c.HP.Current, c.HP.Max)
 	fmt.Printf("AC: %d\n", c.GetAC())
 	fmt.Printf("Speed: %d\n", c.GetSpeed())
 
 	fmt.Printf("Stats:\n")
-	fmt.Printf("\tStrength: %d\n", c.Strength.GetAbilityScore())
-	fmt.Printf("\tDexterity: %d\n", c.Dexterity.GetAbilityScore())
-	fmt.Printf("\tConstitution: %d\n", c.Constitution.GetAbilityScore())
-	fmt.Printf("\tWisdom: %d\n", c.Wisdom.GetAbilityScore())
-	fmt.Printf("\tIntelligence: %d\n", c.Intelligence.GetAbilityScore())
-	fmt.Printf("\tCharisma: %d\n", c.Charisma.GetAbilityScore())
+	writer := tabwriter.NewWriter(os.Stdout, 0, 8, 1, '\t', tabwriter.AlignRight)
+	fmt.Fprintln(writer, "\tStrength:\t", c.Strength.Score, "\t", c.Strength.GetModifier())
+	fmt.Fprintln(writer, "\tDexterity:\t", c.Dexterity.Score, "\t", c.Dexterity.GetModifier())
+	fmt.Fprintln(writer, "\tConstitution:\t", c.Constitution.Score, "\t", c.Constitution.GetModifier())
+	fmt.Fprintln(writer, "\tWisdom:\t", c.Wisdom.Score, "\t", c.Wisdom.GetModifier())
+	fmt.Fprintln(writer, "\tIntelligence:\t", c.Intelligence.Score, "\t", c.Intelligence.GetModifier())
+	fmt.Fprintln(writer, "\tCharisma:\t", c.Charisma.Score, "\t", c.Charisma.GetModifier())
+	writer.Flush()
 
 	fmt.Println()
 	fmt.Println("Equipment:")
 	for _, item := range c.equipment {
-		fmt.Printf("\t%v\n", item)
+		fmt.Printf("\t%+v\n", item)
 	}
 	fmt.Println()
 }
