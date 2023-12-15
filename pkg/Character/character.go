@@ -123,7 +123,7 @@ func (c *Character) RemoveItem(i interface{}) {
 func (c *Character) Print() {
 	fmt.Printf("Name: %s \t Race: %s\n", c.Name, c.Race.Name)
 	fmt.Printf("Age: %d \t Height: %s\t Weight: %d\n", c.Age, c.Height, c.Weight)
-	fmt.Printf("Level: %d, Class: %s\n", c.Class.GetLevel(), c.Class.Name)
+	fmt.Printf("Level: %d \t Class: %s\n", c.Class.GetLevel(), c.Class.Name)
 
 	fmt.Printf("HP: %d/%d\n", c.HP.Current, c.HP.Max)
 	fmt.Printf("AC: %d\n", c.GetAC())
