@@ -7,6 +7,7 @@ import (
 
 	class "github.com/Bilrik/pc-session-aid/pkg/Class"
 	race "github.com/Bilrik/pc-session-aid/pkg/Race"
+	stats "github.com/Bilrik/pc-session-aid/pkg/Stats"
 )
 
 func WithCharacterName(name string) func(*Character) {
@@ -120,11 +121,27 @@ func (c *Character) RemoveItem(i interface{}) {
 }
 
 // HP
-func (c *Character) Damage(damage int) {
-	c.hp.ModifyCurrent(-damage)
+// GetHP returns the current and max HP of the character.
+func (c *Character) GetHP() stats.HP {
+	return c.hp
 }
-func (c *Character) Heal(heal int) {
-	c.hp.ModifyCurrent(heal)
+
+// Damage the character for hp. If hp is negative, return an error.
+func (c *Character) Damage(hp int) error {
+	if hp < 0 {
+		return ErrInvalidHP
+	}
+	c.hp.ModifyCurrent(-hp)
+	return nil
+}
+
+// Heal the character for hp. If hp is negative, return an error.
+func (c *Character) Heal(hp int) error {
+	if hp < 0 {
+		return ErrInvalidHP
+	}
+	c.hp.ModifyCurrent(hp)
+	return nil
 }
 
 // display
