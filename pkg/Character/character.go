@@ -104,17 +104,17 @@ func (c *Character) GetWillSave() int {
 }
 
 func (c *Character) GetInventory() []interface{} {
-	return c.equipment
+	return c.inventory
 }
 
 func (c *Character) AddItem(i interface{}) {
-	c.equipment = append(c.equipment, i)
+	c.inventory = append(c.inventory, i)
 }
 
 func (c *Character) RemoveItem(i interface{}) {
-	for index, item := range c.equipment {
+	for index, item := range c.inventory {
 		if item == i {
-			c.equipment = append(c.equipment[:index], c.equipment[index+1:]...)
+			c.inventory = append(c.inventory[:index], c.inventory[index+1:]...)
 			return
 		}
 	}
@@ -140,8 +140,8 @@ func (c *Character) Print() {
 	writer.Flush()
 
 	fmt.Println()
-	fmt.Println("Equipment:")
-	for _, item := range c.equipment {
+	fmt.Println("Inventory:")
+	for _, item := range c.inventory {
 		fmt.Printf("\t%+v\n", item)
 	}
 	fmt.Println()
