@@ -11,43 +11,43 @@ import (
 
 func WithCharacterName(name string) func(*Character) {
 	return func(c *Character) {
-		c.Name = name
+		c.name = name
 	}
 }
 
 func WithAge(age uint) func(*Character) {
 	return func(c *Character) {
-		c.Age = age
+		c.age = age
 	}
 }
 
 func WithHeight(height string) func(*Character) {
 	return func(c *Character) {
-		c.Height = height
+		c.height = height
 	}
 }
 
 func WithAbilityScores(intelligence, charisma, strength, dexterity, constitution, wisdom uint) func(*Character) {
 	return func(c *Character) {
-		c.Intelligence.SetAbilityScore(intelligence)
-		c.Charisma.SetAbilityScore(charisma)
-		c.Strength.SetAbilityScore(strength)
-		c.Dexterity.SetAbilityScore(dexterity)
-		c.Constitution.SetAbilityScore(constitution)
-		c.Wisdom.SetAbilityScore(wisdom)
+		c.intelligence.SetAbilityScore(intelligence)
+		c.charisma.SetAbilityScore(charisma)
+		c.strength.SetAbilityScore(strength)
+		c.dexterity.SetAbilityScore(dexterity)
+		c.constitution.SetAbilityScore(constitution)
+		c.wisdom.SetAbilityScore(wisdom)
 	}
 }
 
 func WithRace(r race.Race) func(*Character) {
 	return func(c *Character) {
-		c.Race = r
+		c.race = r
 	}
 }
 
 func WithClass(class class.Class) func(*Character) {
 	return func(c *Character) {
-		c.Class = class
-		c.Class.LevelUp()
+		c.class = class
+		c.class.LevelUp()
 	}
 }
 
@@ -58,22 +58,22 @@ func NewCharacter(opts ...func(*Character)) (*Character, error) {
 		opt(c)
 	}
 
-	if hp := int(c.Class.GetHitDie()) + c.Constitution.GetModifier(); hp < 1 {
+	if hp := int(c.class.GetHitDie()) + c.constitution.GetModifier(); hp < 1 {
 		return nil, ErrInvalidHP
 	} else {
-		c.HP.Max = uint(hp)
+		c.hp.Max = uint(hp)
 	}
-	c.HP.Current = int(c.HP.Max)
+	c.hp.Current = int(c.hp.Max)
 
 	return c, nil
 }
 
 func (c *Character) GetSpeed() uint {
-	return c.Race.Speed
+	return c.race.Speed
 }
 
 func (c *Character) GetAC() uint {
-	ac := 10 + c.Dexterity.GetModifier() + c.Race.Size.GetACBonus()
+	ac := 10 + c.dexterity.GetModifier() + c.race.Size.GetACBonus()
 
 	if ac < 0 {
 		return 0
@@ -82,35 +82,34 @@ func (c *Character) GetAC() uint {
 	return uint(ac)
 }
 
+// class
 func (c *Character) LevelUp(takeAverage bool) {
-	c.Class.LevelUp()
-	hpGain := c.Class.GetHPRoll()
+	c.class.LevelUp()
+	hpGain := c.class.GetHPRoll()
 	if takeAverage {
-		hpGain = c.Class.GetHPAverage()
+		hpGain = c.class.GetHPAverage()
 	}
-	c.HP.ModifyMax(int(hpGain))
+	c.hp.ModifyMax(int(hpGain))
 }
 
+// saves
 func (c *Character) GetFortitudeSave() int {
-	return c.Constitution.GetModifier()
+	return c.constitution.GetModifier()
 }
-
 func (c *Character) GetReflexSave() int {
-	return c.Dexterity.GetModifier()
+	return c.dexterity.GetModifier()
 }
-
 func (c *Character) GetWillSave() int {
-	return c.Wisdom.GetModifier()
+	return c.wisdom.GetModifier()
 }
 
+// inventory
 func (c *Character) GetInventory() []interface{} {
 	return c.inventory
 }
-
 func (c *Character) AddItem(i interface{}) {
 	c.inventory = append(c.inventory, i)
 }
-
 func (c *Character) RemoveItem(i interface{}) {
 	for index, item := range c.inventory {
 		if item == i {
@@ -120,23 +119,32 @@ func (c *Character) RemoveItem(i interface{}) {
 	}
 }
 
-func (c *Character) Print() {
-	fmt.Printf("Name: %s \t Race: %s\n", c.Name, c.Race.Name)
-	fmt.Printf("Age: %d \t Height: %s\t Weight: %d\n", c.Age, c.Height, c.Weight)
-	fmt.Printf("Level: %d \t Class: %s\n", c.Class.GetLevel(), c.Class.Name)
+// HP
+func (c *Character) Damage(damage int) {
+	c.hp.ModifyCurrent(-damage)
+}
+func (c *Character) Heal(heal int) {
+	c.hp.ModifyCurrent(heal)
+}
 
-	fmt.Printf("HP: %d/%d\n", c.HP.Current, c.HP.Max)
+// display
+func (c *Character) Print() {
+	fmt.Printf("Name: %s \t Race: %s\n", c.name, c.race.Name)
+	fmt.Printf("Age: %d \t Height: %s\t Weight: %d\n", c.age, c.height, c.weight)
+	fmt.Printf("Level: %d \t Class: %s\n", c.class.GetLevel(), c.class.Name)
+
+	fmt.Printf("HP: %d/%d\n", c.hp.Current, c.hp.Max)
 	fmt.Printf("AC: %d\n", c.GetAC())
 	fmt.Printf("Speed: %d\n", c.GetSpeed())
 
 	fmt.Printf("Stats:\n")
 	writer := tabwriter.NewWriter(os.Stdout, 0, 8, 1, '\t', tabwriter.AlignRight)
-	fmt.Fprintln(writer, "\tStrength:\t", c.Strength.Score, "\t", c.Strength.GetModifier())
-	fmt.Fprintln(writer, "\tDexterity:\t", c.Dexterity.Score, "\t", c.Dexterity.GetModifier())
-	fmt.Fprintln(writer, "\tConstitution:\t", c.Constitution.Score, "\t", c.Constitution.GetModifier())
-	fmt.Fprintln(writer, "\tWisdom:\t", c.Wisdom.Score, "\t", c.Wisdom.GetModifier())
-	fmt.Fprintln(writer, "\tIntelligence:\t", c.Intelligence.Score, "\t", c.Intelligence.GetModifier())
-	fmt.Fprintln(writer, "\tCharisma:\t", c.Charisma.Score, "\t", c.Charisma.GetModifier())
+	fmt.Fprintln(writer, "\tStrength:\t", c.strength.Score, "\t", c.strength.GetModifier())
+	fmt.Fprintln(writer, "\tDexterity:\t", c.dexterity.Score, "\t", c.dexterity.GetModifier())
+	fmt.Fprintln(writer, "\tConstitution:\t", c.constitution.Score, "\t", c.constitution.GetModifier())
+	fmt.Fprintln(writer, "\tWisdom:\t", c.wisdom.Score, "\t", c.wisdom.GetModifier())
+	fmt.Fprintln(writer, "\tIntelligence:\t", c.intelligence.Score, "\t", c.intelligence.GetModifier())
+	fmt.Fprintln(writer, "\tCharisma:\t", c.charisma.Score, "\t", c.charisma.GetModifier())
 	writer.Flush()
 
 	fmt.Println()

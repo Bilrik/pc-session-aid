@@ -9,19 +9,19 @@ import (
 )
 
 type Character struct {
-	Name         string
-	Age          uint
-	Height       string
-	Weight       uint
-	HP           stats.HP
-	Strength     stats.Ability
-	Dexterity    stats.Ability
-	Constitution stats.Ability
-	Intelligence stats.Ability
-	Wisdom       stats.Ability
-	Charisma     stats.Ability
-	Race         race.Race
-	Class        class.Class
+	name         string
+	age          uint
+	height       string
+	weight       uint
+	hp           stats.HP
+	strength     stats.Ability
+	dexterity    stats.Ability
+	constitution stats.Ability
+	intelligence stats.Ability
+	wisdom       stats.Ability
+	charisma     stats.Ability
+	race         race.Race
+	class        class.Class
 	inventory    []interface{}
 }
 
