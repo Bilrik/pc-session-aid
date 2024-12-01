@@ -1,6 +1,9 @@
 package stats
 
+import "fmt"
+
 func (hp *HP) ModifyCurrent(amount int) {
+	fmt.Println("Modifying HP", hp.Current, amount)
 	hp.Current += amount
 }
 

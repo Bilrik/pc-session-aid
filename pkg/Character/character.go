@@ -1,13 +1,15 @@
 package character
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"text/tabwriter"
 
-	class "github.com/Bilrik/pc-session-aid/pkg/Class"
-	race "github.com/Bilrik/pc-session-aid/pkg/Race"
-	stats "github.com/Bilrik/pc-session-aid/pkg/Stats"
+	class "github.com/CyTechNomad/pc-session-aid/pkg/Class"
+	equipment "github.com/CyTechNomad/pc-session-aid/pkg/Equipment"
+	race "github.com/CyTechNomad/pc-session-aid/pkg/Race"
+	stats "github.com/CyTechNomad/pc-session-aid/pkg/Stats"
 )
 
 func WithCharacterName(name string) func(*Character) {
@@ -66,6 +68,8 @@ func NewCharacter(opts ...func(*Character)) (*Character, error) {
 	}
 	c.hp.Current = int(c.hp.Max)
 
+	c.inventory = make(map[equipment.Equipment]int)
+
 	return c, nil
 }
 
@@ -105,19 +109,21 @@ func (c *Character) GetWillSave() int {
 }
 
 // inventory
-func (c *Character) GetInventory() []interface{} {
+func (c *Character) GetInventory() map[equipment.Equipment]int {
 	return c.inventory
 }
-func (c *Character) AddItem(i interface{}) {
-	c.inventory = append(c.inventory, i)
+func (c *Character) AddItem(i equipment.Equipment) {
+	c.inventory[i]++
 }
-func (c *Character) RemoveItem(i interface{}) {
-	for index, item := range c.inventory {
-		if item == i {
-			c.inventory = append(c.inventory[:index], c.inventory[index+1:]...)
-			return
+func (c *Character) RemoveItem(i equipment.Equipment) error {
+	if v, ok := c.inventory[i]; ok {
+		c.inventory[i]--
+		if v-1 < 1 {
+			delete(c.inventory, i)
 		}
+		return nil
 	}
+	return errors.New("Item not in inventory")
 }
 
 // HP
@@ -127,12 +133,8 @@ func (c *Character) GetHP() stats.HP {
 }
 
 // Damage the character for hp. If hp is negative, return an error.
-func (c *Character) Damage(hp int) error {
-	if hp < 0 {
-		return ErrInvalidHP
-	}
-	c.hp.ModifyCurrent(-hp)
-	return nil
+func (c *Character) Damage(hp uint) {
+	c.hp.ModifyCurrent(-int(hp))
 }
 
 // Heal the character for hp. If hp is negative, return an error.
@@ -166,8 +168,27 @@ func (c *Character) Print() {
 
 	fmt.Println()
 	fmt.Println("Inventory:")
-	for _, item := range c.inventory {
-		fmt.Printf("\t%+v\n", item)
+	for item, v := range c.inventory {
+		fmt.Printf("\t%+v:\t%d\n", item, v)
 	}
 	fmt.Println()
+	if c.primaryHand != nil {
+		fmt.Println("Primary Hand:", c.primaryHand.(equipment.Equipment).GetName())
+	}
+	fmt.Println()
+}
+
+// test
+func (c *Character) SetPrimaryHand(i equipment.Equipment) error {
+	if _, ok := c.inventory[i]; ok {
+		c.primaryHand = i
+		return nil
+	}
+	return errors.New("Item not in inventory")
+}
+
+func (c *Character) Attack(target *Character) {
+	if w, ok := c.primaryHand.(equipment.Weapon); ok {
+		target.Damage(w.GetDamage())
+	}
 }

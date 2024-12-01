@@ -1,8 +1,8 @@
 package race
 
 import (
-	class "github.com/Bilrik/pc-session-aid/pkg/Class"
-	stats "github.com/Bilrik/pc-session-aid/pkg/Stats"
+	class "github.com/CyTechNomad/pc-session-aid/pkg/Class"
+	stats "github.com/CyTechNomad/pc-session-aid/pkg/Stats"
 )
 
 type Race struct {

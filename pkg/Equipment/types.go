@@ -1,26 +1,38 @@
 package equipment
 
-type Equipment struct {
+type Equipment interface {
+	GetName() string
+	GetDescription() string
+	GetWeight() float32
+	GetCost() float32
+}
+
+type Weapon interface {
+	GetDamage() uint
+}
+type AcItem interface {
+	GetACBonus() int
+}
+
+type Item struct {
 	Name        string
 	Description string
 	Weight      float32
 	Cost        float32
 }
 
-type Weapon struct {
-	Equipment
-	DamageDice         uint
-	Critical           uint
-	CriticalMultiplier uint
-	Type               string
-	Range              uint
+func (i Item) GetName() string {
+	return i.Name
 }
 
-type Armor struct {
-	Equipment
-	ACBonus      uint
-	MaxDex       uint
-	CheckPenalty int
-	Speed        uint
-	Special      string
+func (i Item) GetDescription() string {
+	return i.Description
+}
+
+func (i Item) GetWeight() float32 {
+	return i.Weight
+}
+
+func (i Item) GetCost() float32 {
+	return i.Cost
 }

@@ -3,9 +3,10 @@ package character
 import (
 	"errors"
 
-	class "github.com/Bilrik/pc-session-aid/pkg/Class"
-	race "github.com/Bilrik/pc-session-aid/pkg/Race"
-	stats "github.com/Bilrik/pc-session-aid/pkg/Stats"
+	class "github.com/CyTechNomad/pc-session-aid/pkg/Class"
+	equipment "github.com/CyTechNomad/pc-session-aid/pkg/Equipment"
+	race "github.com/CyTechNomad/pc-session-aid/pkg/Race"
+	stats "github.com/CyTechNomad/pc-session-aid/pkg/Stats"
 )
 
 type Character struct {
@@ -22,7 +23,8 @@ type Character struct {
 	charisma     stats.Ability
 	race         race.Race
 	class        class.Class
-	inventory    []interface{}
+	inventory    map[equipment.Equipment]int
+	primaryHand  equipment.Equipment
 }
 
 var (
