@@ -173,7 +173,7 @@ func (c *Character) Print() {
 	}
 	fmt.Println()
 	if c.primaryHand != nil {
-		fmt.Println("Primary Hand:", c.primaryHand.(equipment.Equipment).GetName())
+		fmt.Println("Primary Hand:", c.primaryHand.GetName())
 	}
 	fmt.Println()
 }
