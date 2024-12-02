@@ -5,58 +5,16 @@ import (
 	stats "github.com/CyTechNomad/pc-session-aid/pkg/Stats"
 )
 
-type Race struct {
+type Race interface {
+	GetName() string
+	GetFavoredClass() class.Class
+	GetSize() stats.Size
+	GetSpeed() uint
+}
+
+type race struct {
 	Name         string
 	Size         stats.Size
 	Speed        uint
 	favoredClass class.Class
 }
-
-var (
-	Human = Race{
-		Name:  "Human",
-		Size:  stats.Medium,
-		Speed: 30,
-	}
-
-	Dwarf = Race{
-		Name:         "Dwarf",
-		Size:         stats.Medium,
-		Speed:        20,
-		favoredClass: class.Fighter,
-	}
-
-	Elf = Race{
-		Name:         "Elf",
-		Size:         stats.Medium,
-		Speed:        30,
-		favoredClass: class.Wizard,
-	}
-
-	Gnome = Race{
-		Name:         "Gnome",
-		Size:         stats.Small,
-		Speed:        20,
-		favoredClass: class.Bard,
-	}
-
-	HalfElf = Race{
-		Name:  "Half-Elf",
-		Size:  stats.Medium,
-		Speed: 30,
-	}
-
-	HalfOrc = Race{
-		Name:         "Half-Orc",
-		Size:         stats.Medium,
-		Speed:        30,
-		favoredClass: class.Barbarian,
-	}
-
-	Halfling = Race{
-		Name:         "Halfling",
-		Size:         stats.Small,
-		Speed:        20,
-		favoredClass: class.Rogue,
-	}
-)

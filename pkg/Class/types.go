@@ -1,64 +1,73 @@
 package class
 
-type Class struct {
+import magic "github.com/CyTechNomad/pc-session-aid/pkg/Magic"
+
+type Class interface {
+	GetLevel() uint
+	LevelUp()
+	GetHitDie() uint
+	GetName() string
+}
+
+type class struct {
 	Name   string
 	hitDie uint
 	level  uint
 }
 
-var (
-	Barbarian = Class{
-		Name:   "Barbarian",
-		hitDie: 12,
-	}
+func (c *class) GetName() string {
+    return c.Name
+}
 
-	Bard = Class{
-		Name:   "Bard",
-		hitDie: 6,
-	}
+func (c *class) GetLevel() uint {
+    return c.level
+}
 
-	Cleric = Class{
-		Name:   "Cleric",
-		hitDie: 8,
-	}
+func (c *class) LevelUp() {
+    c.level++
+}
 
-	Druid = Class{
-		Name:   "Druid",
-		hitDie: 8,
-	}
+func (c *class) GetHitDie() uint {
+    return c.hitDie
+}
 
-	Fighter = Class{
-		Name:   "Fighter",
-		hitDie: 10,
-	}
+type Caster interface {
+    getSpellSlots() []uint
+    getSpellsKnown() [][]uint
+}
 
-	Monk = Class{
-		Name:   "Monk",
-		hitDie: 8,
-	}
+type caster struct {
+    spellsKnown []uint
+    spellSlots []uint
+    maxSpellSlots []uint
+}
 
-	Paladin = Class{
-		Name:   "Paladin",
-		hitDie: 10,
-	}
+func (c *caster) getSpellSlots() []uint {
+    return c.spellSlots
+}
 
-	Ranger = Class{
-		Name:   "Ranger",
-		hitDie: 8,
-	}
+func (c *caster) getSpellsKnown() []uint {
+    return c.spellsKnown
+}
 
-	Rogue = Class{
-		Name:   "Rogue",
-		hitDie: 6,
-	}
+func (c *caster) consumeSpellSlot(level uint) error{
+    if c.spellSlots[level] > 0 {
+        c.spellSlots[level]--
+        return nil
+    }
+    return ErrNoSpellSlots    
+}
 
-	Sorcerer = Class{
-		Name:   "Sorcerer",
-		hitDie: 4,
-	}
+func (c *caster) regainSpellSlot(level uint) error{
+    if c.spellSlots[level] < c.maxSpellSlots[level] {
+        c.spellSlots[level]++
+        return nil
+    }
+    return ErrMaxSpellSlots
+}
 
-	Wizard = Class{
-		Name:   "Wizard",
-		hitDie: 4,
-	}
-)
+type PreparedCaster interface {
+    GetPreparedSpells() [][]magic.Spell
+    PrepareSpell(spell magic.Spell) error
+    consumePreparedSpell(spell magic.Spell) error
+}

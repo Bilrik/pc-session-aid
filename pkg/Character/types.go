@@ -1,8 +1,6 @@
 package character
 
 import (
-	"errors"
-
 	class "github.com/CyTechNomad/pc-session-aid/pkg/Class"
 	equipment "github.com/CyTechNomad/pc-session-aid/pkg/Equipment"
 	race "github.com/CyTechNomad/pc-session-aid/pkg/Race"
@@ -26,7 +24,3 @@ type Character struct {
 	inventory    map[equipment.Equipment]int
 	primaryHand  equipment.Equipment
 }
-
-var (
-	ErrInvalidHP = errors.New("HP invalid")
-)

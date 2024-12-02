@@ -10,8 +10,30 @@ type Equipment interface {
 type Weapon interface {
 	GetDamage() uint
 }
+
+type RangedWeapon interface {
+	RequiredAmmo() string
+}
+
+type ChargeWeapon interface {
+	GetCharges() uint
+	UseCharge()
+}
+
 type AcItem interface {
 	GetACBonus() int
+}
+
+type Ammunition interface {
+	GetAmmoType() string
+}
+
+type Container interface {
+    GetCapacity() uint
+    GetItems() []Equipment
+    AddItem(Equipment) error
+    RemoveItem(Equipment) error
+    GetWeight() float32
 }
 
 type Item struct {

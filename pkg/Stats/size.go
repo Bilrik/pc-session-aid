@@ -15,6 +15,6 @@ var (
 	}
 )
 
-func (s *Size) GetACBonus() int {
+func (s Size) GetACBonus() int {
 	return s.ACmod
 }

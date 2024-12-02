@@ -18,11 +18,12 @@ func main() {
 	)
 
 	c.AddItem(Items.Luckstone)
-	c.AddItem(Items.Torch)
+	c.AddItem(Items.Shortbow)
+	c.AddItems(Items.Arrow, 20)
 	c.AddItem(Items.Torch)
 	c.AddItem(Items.Torch)
 
-	if err := c.SetPrimaryHand(Items.Luckstone); err != nil {
+	if err := c.SetPrimaryHand(Items.Shortbow); err != nil {
 		panic(err)
 	}
 
@@ -35,7 +36,9 @@ func main() {
 		character.WithAbilityScores(18, 16, 14, 12, 10, 8),
 	)
 
-	c.Attack(b)
+	if err := c.Attack(b); err != nil {
+		panic(err)
+	}
 
 	c.Print()
 	b.Print()
